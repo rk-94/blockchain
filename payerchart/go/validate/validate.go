@@ -1,78 +1,72 @@
 package validate
-
+/* Imports
+ * 2 utility libraries for formatting, handling bytes, reading and writing JSON, and string manipulation
+ * 1 specific Hyperledger Fabric specific libraries for Smart Contracts
+ */
 import (
 	"fmt"
 	"bytes"
     	"github.com/hyperledger/fabric/core/chaincode/shim"
-    //pb "github.com/hyperledger/fabric/protos/peer"
-     
-	 )
+ )
 
+/*checks whether the provided hash is valid or not
+ arg - hash value
+ returns bool value with the message
+*/
 func CheckHashKey(stub shim.ChaincodeStubInterface, arg string) (bool, string) {
 
 	hash := arg
-	getHash, err := stub.GetState(hash)
 	
-	invalid := fmt.Sprintf("Invalid Hash Key %s",string(getHash))
+	queryString := fmt.Sprintf("{\"selector\":{\"_rev\":\"%s\"}}", hash)
+
+	getHash, err := stub.GetQueryResult(queryString)
+
+	invalid := fmt.Sprintf("Invalid Hash Key")
 	
 	if err != nil {
 		return false, invalid
-	}else if getHash == nil {
+	}
+	if !getHash.HasNext() {
 		return false, invalid
 	}
 
 	return true, ""
-	/*resultsIterator, err := getQueryResultForQueryString(stub, arg)
-	if err != nil {
-		return nil, err
-	}
-	return resultsIterator, err*/
 }
-
+/*checks whether the provided hash is valid or not
+ arg - payerid value
+ returns bool value with the message
+*/
 func CheckPayerId(stub shim.ChaincodeStubInterface, arg string) (bool, string) {
 
 	payerId := arg
-	getId, err := stub.GetState(payerId)
+	
+	queryString := fmt.Sprintf("{\"selector\":{\"payerId\":\"%s\"}}", payerId)
 
-	invalid := fmt.Sprintf("Invalid PayerId %s",string(getId))
+	getId, err := stub.GetQueryResult(queryString)
+	
+	invalid := fmt.Sprintf("Invalid PayerId")
 	
 	if err != nil {
 		return false, invalid
-	}else if getId == nil {
+	}
+	if !getId.HasNext() {
 		return false, invalid
 	}
 
 	return true, ""
 }
-
-func CheckPayerWithHash(stub shim.ChaincodeStubInterface, args[] string) (bool, error){
-	if len(args) < 2 {
-		return false, nil
-	}
-	payerId := args[0]
-	hash := args[1]
-
-	//invalid := fmt.Sprintf("Invalid PayerId with hash")
+/*checks whether the provided hash is valid or not
+ args - array of string having hash and payerid as values
+ returns array of byte and error
+*/
+func CheckPayerWithHash(stub shim.ChaincodeStubInterface, args[] string) ([]byte, error){
 	
-	queryString := fmt.Sprintf("{\"selector\":{\"payerid\":\"%s\", \"pathash\":\"%s\"}}", payerId, hash)
-
-	getPayerWithHash, err := getQueryResultForQueryString(stub, queryString)
-	if err != nil {
-		return false, err
-	}
-	if len(getPayerWithHash) <= 0 {
-		return false, err
-	}	
+	queryString := fmt.Sprintf("{\"selector\":{\"_rev\":\"%s\", \"payerId\":\"%s\"}}", args[0], args[1])
 	
-	return true, nil
-	
-}
-
-func getQueryResultForQueryString(stub shim.ChaincodeStubInterface, queryString string) ([]byte, error) {
-
 	fmt.Printf("- getQueryResultForQueryString queryString:\n%s\n", queryString)
 
 	resultsIterator, err := stub.GetQueryResult(queryString)
+	
 	if err != nil {
 		return nil, err
 	}

@@ -1,39 +1,49 @@
 package insertion
-
+/* Imports
+ * 3 utility libraries for formatting, handling bytes, reading and writing JSON, and string manipulation
+ * 1 specific Hyperledger Fabric specific libraries for Smart Contracts
+ */
 import(
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"encoding/json"
-	"bytes"
+	"fmt"
+	"math/rand"
 )
 
+//Define the structure of the data in database
 type Payer struct {
-	Clientid        string `json:"clientid"`
+	ClientId        string `json:"clientId"`
 	DateAsserted    string `json:"dateAsserted"`
-	Patdisplay      string `json:"patdisplay"`
-	Pathash         string `json:"pathash"`
-	Patreference    string `json:"patreference"`
-	Payerid         string `json:"Payerid"`
-	Periodstart     string `json:"periodstart"`
-	Sourcedisplay   string `json:"sourcedisplay"`
-	Sourcereference string `json:"sourcereference"`
+	PatDisplay      string `json:"patDisplay"`
+	PatReference    string `json:"patReference"`
+	PayerId         string `json:"payerId"`
+	PeriodStart     string `json:"periodStart"`
+	SourceDisplay   string `json:"sourceDisplay"`
+	SourceReference string `json:"sourceReference"`
 	Status          string `json:"status"`
 	WasTaken        string `json:"wasTaken"`
 }
 
-func InsertData(stub shim.ChaincodeStubInterface, args[]string) (int, error) {
-	if len(args) != 12 {
-		return 0, nil
+/*will insert the new record into the database
+ args- array of string carrying data
+ returns the url to fetch the hash key
+*/
+func InsertData(stub shim.ChaincodeStubInterface, args[]string) (string){
+	if len(args) != 10 {
+		panic(fmt.Sprintf("incorrect arguments"))
 	}
+	i := rand.Int()
+	id := fmt.Sprintf("%s%d","PATIENT",i)
 	
-	var buffer bytes.Buffer
-        buffer.WriteString("")
-
-	var Payerdata = Payer{Pathash:args[1], Payerid:args[2], Patreference: args[3], Patdisplay: args[4], Sourcereference: args[5], Sourcedisplay: args[6], DateAsserted: args[7], Status: args[8], WasTaken: args[9], Periodstart: args[10], Clientid: args[11]}
+	var Payerdata = Payer{PayerId: args[0], PatReference: args[1], PatDisplay: args[2], SourceReference: args[3], SourceDisplay: args[4], DateAsserted: args[5], Status: args[6], WasTaken: args[7], PeriodStart: args[8], ClientId: args[9]}
 
 	PayerAsBytes, _ := json.Marshal(Payerdata)
-	insertErr := stub.PutState(args[0], PayerAsBytes)
+	insertErr := stub.PutState(id, PayerAsBytes)
 	if insertErr!= nil {
-		return 0, insertErr
+		panic(insertErr.Error())
+	}else{
+		fmt.Println("Inserted")
 	}
-	return 1, nil
+	url := fmt.Sprintf("http://rdctstbc001:5984/mychannel_mycc/%s",id)
+	return url	
 }
