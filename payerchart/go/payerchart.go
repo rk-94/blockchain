@@ -6,9 +6,8 @@ package main
  import (
 	"fmt"
 	"bytes"
-	"strconv"
-	//"net/http"
-	//"io/ioutil"
+	"net/http"
+	"io/ioutil"
 	"encoding/json"
         "github.com/hyperledger/fabric/core/chaincode/shim"
         pb "github.com/hyperledger/fabric/protos/peer"
@@ -27,16 +26,9 @@ var url_ref Url
 
 //Define the data structure
 type Payer struct {
-	ClientId        string `json:"clientId"`
-	DateAsserted    string `json:"dateAsserted"`
-	PatDisplay      string `json:"patDisplay"`
-	PatReference    string `json:"patReference"`
-	PayerId         string `json:"payerId"`
-	PeriodStart     string `json:"periodStart"`
-	SourceDisplay   string `json:"sourceDisplay"`
-	SourceReference string `json:"sourceReference"`
-	Status          string `json:"status"`
-	WasTaken        string `json:"wasTaken"`
+	PatientId    	string `json:"patientId"`
+	PayerId		string `json:"payerId"`
+	FhirUrl    	string `json:"fhirUrl"`
 }
 // ===================================================================================
 // Main
@@ -60,37 +52,20 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	fmt.Println("invoke is running " + function)
 
 	// Handle different functions
-	if function == "initLedger" { //read the data from the json file
-		return t.initLedger(stub)
-	}else if function == "isValid"{
+	if function == "isValid"{
 		return t.isValid(stub,args)
 	}else if function == "queryByHash"{
 		return t.queryByHash(stub,args)
 	}else if function == "queryCustom"{
 		return t.queryCustom(stub,args)
-	}else if function == "insertData"{
-		return t.insertData(stub,args)
+	}else if function == "insert"{
+		return t.insert(stub,args)
+	}else if function == "retHash"{
+		return t.retHash(stub)
 	}
 	
 	fmt.Println("invoke did not find func: " + function) //error
 	return shim.Error("Received unknown function invocation")
-}
-
-//initLedger - populate the database with the data
-func (t *SimpleChaincode) initLedger(stub shim.ChaincodeStubInterface) pb.Response {
-	patients := []Payer{
-		Payer{PayerId: "CI08128",PatReference: "Patient/4342010",PatDisplay: "Smart, Joe", SourceReference: "Practitioner/1912007",SourceDisplay: "who, Doctor",DateAsserted: "2016-06-27T09:57:32.000-05:00",Status: "active",WasTaken: "false",PeriodStart: "2016-06-27T09:00:00.000-07:00",ClientId:"CLM0098"},
-		Payer{PayerId: "AT09562",PatReference: "Patient/4342011",PatDisplay: "Himilton, Jack",SourceReference: "Practitioner/1912007",SourceDisplay: "Who, Doctor",DateAsserted: "2017-06-27T09:57:32.000-05:00",Status: "active",WasTaken: "true",PeriodStart: "2017-06-27T09:00:00.000-07:00",ClientId:"CLM0097"},
-		Payer{PayerId: "CI02129",PatReference: "Patient/4343019",PatDisplay: "Hilton, Mariya",SourceReference: "Practitioner/1912007",SourceDisplay: "Who, Doctor",DateAsserted: "2015-06-27T09:17:32.000-05:00",Status: "active",WasTaken: "true",PeriodStart: "2015-06-27T09:17:00.000-07:00",ClientId:"CLM0045"}}
-	i := 0
-	for i < len(patients) {
-		fmt.Println("i is ", i)
-                patAsBytes, _ := json.Marshal(patients[i])
-                stub.PutState("PATIENT"+strconv.Itoa((i*i*i*i*i)+5678912340987345271), patAsBytes)
-                fmt.Println("Added", patients[i])
-                i = i + 1
-	}
-	return shim.Success(nil)	
 }
 
 //will do the validation of hash and payerId
@@ -159,51 +134,43 @@ func (t *SimpleChaincode) queryCustom(stub shim.ChaincodeStubInterface, args[]st
 }
 
 //call insert function to insert new record into the database
-func (t *SimpleChaincode) insertData(stub shim.ChaincodeStubInterface, args[]string) pb.Response {
+func (t *SimpleChaincode) insert(stub shim.ChaincodeStubInterface, args[]string) pb.Response {
 	
 	var buffer bytes.Buffer
 
-	if len(args) != 10 {
-		return shim.Error("Incorrect number of arguments. Expecting 10")
+	if len(args) != 4 {
+		return shim.Error("Incorrect number of arguments. Expecting 4")
 	}
-
-	url_ref.url = InsertData(stub,args)
-	fmt.Println(url_ref.url)
-
-	response := shim.Success(nil)
-	buffer.WriteString("Reached here")
-
-	fmt.Println(response)
-	
-	/*status := response.GetStatus()
-
-	fmt.Println(status)
-	if status == 200 {
-		url := url_ref.url
-		var dat map[string]interface{}
-		resp, err := http.Get(url)
-
-		if err != nil {
-		panic(err)
-		}
-		defer resp.Body.Close()
-	
-		contents, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-            		panic(err.Error())
-		}
-		err1 := json.Unmarshal(contents, &dat)
-		if err1 != nil{
-			panic(err.Error())
-		}
-	
-		fmt.Println(dat["_rev"])
-    		fmt.Printf("%s\n", string(contents))
-	
-		hash = fmt.Sprintf("The Hash for the added patient is: %s", dat["_rev"].(string))
-	}else {
-		return shim.Error("data not inserted")
-	}*/
+	url_ref.url = insertData(stub,args)
+	buffer.WriteString(url_ref.url)
 		
-	return shim.Success(nil)
+	return shim.Success(buffer.Bytes())
+}
+
+func (t *SimpleChaincode) retHash(stub shim.ChaincodeStubInterface) pb.Response {
+	var buffer bytes.Buffer
+	url := url_ref.url
+	var dat map[string]interface{}
+	resp, err := http.Get(url)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+	
+	contents, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+        	panic(err.Error())
+	}
+	err1 := json.Unmarshal(contents, &dat)
+	if err1 != nil{
+		panic(err.Error())
+	}
+	
+	fmt.Println(dat["_rev"])
+    	buffer.WriteString(string(contents))
+	
+	hash := fmt.Sprintf("The Hash for the added patient is: %s", dat["_rev"].(string))
+	buffer.WriteString(hash)
+	
+	return shim.Success(buffer.Bytes())
 }
