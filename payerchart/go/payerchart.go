@@ -1,14 +1,11 @@
 package main 
 /* Imports
- * 6 utility libraries for formatting, handling bytes, reading and writing JSON, and string manipulation
- * 4 specific Hyperledger Fabric specific libraries for Smart Contracts
+ * 2 utility libraries for formatting, handling bytes, reading and writing JSON, and string manipulation
+ * 2 specific Hyperledger Fabric specific libraries for Smart Contracts
  */ 
  import (
 	"fmt"
 	"bytes"
-	"net/http"
-	"io/ioutil"
-	"encoding/json"
         "github.com/hyperledger/fabric/core/chaincode/shim"
         pb "github.com/hyperledger/fabric/protos/peer"
        ) 
@@ -16,13 +13,6 @@ package main
 // Define the Smart Contract structure 
 type SimpleChaincode struct {
 }
-
-//Define the structure for url
-type Url struct {
-	url string
-}
-
-var url_ref Url
 
 //Define the data structure
 type Payer struct {
@@ -60,8 +50,6 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return t.queryCustom(stub,args)
 	}else if function == "insert"{
 		return t.insert(stub,args)
-	}else if function == "retHash"{
-		return t.retHash(stub)
 	}
 	
 	fmt.Println("invoke did not find func: " + function) //error
@@ -141,36 +129,8 @@ func (t *SimpleChaincode) insert(stub shim.ChaincodeStubInterface, args[]string)
 	if len(args) != 4 {
 		return shim.Error("Incorrect number of arguments. Expecting 4")
 	}
-	url_ref.url = insertData(stub,args)
-	buffer.WriteString(url_ref.url)
+	encounter_id := insertData(stub,args)
+	buffer.WriteString(encounter_id)
 		
-	return shim.Success(buffer.Bytes())
-}
-
-func (t *SimpleChaincode) retHash(stub shim.ChaincodeStubInterface) pb.Response {
-	var buffer bytes.Buffer
-	url := url_ref.url
-	var dat map[string]interface{}
-	resp, err := http.Get(url)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-	
-	contents, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-        	panic(err.Error())
-	}
-	err1 := json.Unmarshal(contents, &dat)
-	if err1 != nil{
-		panic(err.Error())
-	}
-	
-	fmt.Println(dat["_rev"])
-    	buffer.WriteString(string(contents))
-	
-	hash := fmt.Sprintf("The Hash for the added patient is: %s", dat["_rev"].(string))
-	buffer.WriteString(hash)
-	
 	return shim.Success(buffer.Bytes())
 }

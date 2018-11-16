@@ -1,12 +1,11 @@
 package main
 /* Imports
- * 3 utility libraries for formatting, handling bytes, reading and writing JSON, and string manipulation
+ * 1 utility libraries for formatting, handling bytes, reading and writing JSON, and string manipulation
  * 1 specific Hyperledger Fabric specific libraries for Smart Contracts
  */
 import(
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"encoding/json"
-	"fmt"
 )
 
 /*will insert the new record into the database
@@ -26,7 +25,6 @@ func insertData(stub shim.ChaincodeStubInterface, args[]string) (string){
 	if insertErr!= nil {
 		panic(insertErr.Error())
 	}
-	url := fmt.Sprintf("http://rdctstbc001:5984/mychannel_mycc/%s",args[0])
 	
-	return url	
+	return args[0]	
 }
