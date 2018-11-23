@@ -13,9 +13,9 @@ import (
  args - array of string having hash and payerid as values
  returns array of byte and error
 */
-func CheckPayerWithHash(stub shim.ChaincodeStubInterface, args[] string) ([]byte, error){
+func CheckPayerWithHash(stub shim.ChaincodeStubInterface, hash string, payerId string) ([]byte, error){
 	
-	queryString := fmt.Sprintf("{\"selector\":{\"_rev\":\"%s\", \"payerId\":\"%s\"}}", args[0], args[1])
+	queryString := fmt.Sprintf("{\"selector\":{\"_rev\":\"%s\", \"payerId\":\"%s\"}}", hash, payerId)
 	
 	fmt.Printf("- getQueryResultForQueryString queryString:\n%s\n", queryString)
 
@@ -28,7 +28,7 @@ func CheckPayerWithHash(stub shim.ChaincodeStubInterface, args[] string) ([]byte
 
 	// buffer is a JSON array containing QueryRecords
 	var buffer bytes.Buffer
-	buffer.WriteString("[")
+	//buffer.WriteString("[")
 
 	bArrayMemberAlreadyWritten := false
 	for resultsIterator.HasNext() {
@@ -51,7 +51,7 @@ func CheckPayerWithHash(stub shim.ChaincodeStubInterface, args[] string) ([]byte
 		buffer.WriteString("}")
 		bArrayMemberAlreadyWritten = true
 	}
-	buffer.WriteString("]")
+	//buffer.WriteString("]")
 
 	fmt.Printf("- getQueryResultForQueryString queryResult:\n%s\n", resultsIterator)
 

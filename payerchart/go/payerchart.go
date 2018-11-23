@@ -16,9 +16,11 @@ type SimpleChaincode struct {
 
 //Define the data structure
 type Payer struct {
-	PatientId    	string `json:"patientId"`
-	PayerId		string `json:"payerId"`
+	ClaimId		string `json:"claimId"`
 	FhirUrl    	string `json:"fhirUrl"`
+	PatientId   string `json:"patientId"`
+	PayerId		string `json:"payerId"`
+	SubmitterId	string `json:"submitterId"`
 }
 // ===================================================================================
 // Main
@@ -59,42 +61,39 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 //will do the validation of hash and payerId
 func (t *SimpleChaincode) isValid(stub shim.ChaincodeStubInterface, args[]string) pb.Response {
 	
-	if len(args) < 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
-	}
-	
 	var buffer bytes.Buffer
-
-	payerId := args[1]
-	hash := args[0]
-			
-	checkPayer, errr := CheckPayerId(stub, payerId)
-	if errr != ""{
-		return shim.Error(errr)
-	}
-	if !checkPayer{
-		return shim.Error("Invalid Payer")
-	}
+	if args[0] == "payerhash" {
+		checkPayerWithHash, err := CheckPayerWithHash(stub, args[1], args[2])
+		if err != nil{
+			return shim.Error(err.Error())
+		}
+		buffer.WriteString(string(checkPayerWithHash[:]))
+		if len(checkPayerWithHash) == 0{
+			return shim.Error("Invalid Payer with Hash")
+		}
+	}else if args[0] == "hash" {
+		hash := args[1]
+		checkHash, errr := CheckHashKey(stub, hash)
+		if errr != ""{
+			return shim.Error(errr)
+		}
+		if !checkHash{
+			return shim.Error("Invalid Hash")
+		}
 	
-	checkHash, errr := CheckHashKey(stub, hash)
-	if errr != ""{
-		return shim.Error(errr)
+	}else if args[0] == "payer" {
+		payerId := args[1]
+		checkPayer, errr := CheckPayerId(stub, payerId)
+		if errr != ""{
+			return shim.Error(errr)
+		}
+		if !checkPayer{
+			return shim.Error("Invalid Payer")
+		}
+	}else {
+		return shim.Error("Invalid arguments")
 	}
-	if !checkHash{
-		return shim.Error("Invalid Hash")
-	}
-
-	checkPayerWithHash, err := CheckPayerWithHash(stub, args)
-	if err != nil{
-		return shim.Error(err.Error())
-	}
-	buffer.WriteString(string(checkPayerWithHash[:]))
-	if len(checkPayerWithHash) == 0{
-		return shim.Error("Invalid Payer with Hash")
-	}
-	
-	return shim.Success(buffer.Bytes())
-
+	return shim.Success(nil)		
 }
 
 //calls QueryByHash function from query package

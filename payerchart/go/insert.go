@@ -14,8 +14,8 @@ import(
 */
 func insertData(stub shim.ChaincodeStubInterface, args[]string) (string){
 	
-	fhir := args[3]+args[1]
-	var Payerdata = &Payer{PatientId: args[1], PayerId: args[2], FhirUrl: fhir}
+	fhir := "https://fhir-open.sandboxcerner.com/dstu2/0b8a0111-e8e6-4c26-a91c-5069cbc6b1ca/Procedure?patient="+args[1]
+	var Payerdata = &Payer{ClaimId: args[0], FhirUrl: fhir, PatientId: args[1], PayerId: args[2], SubmitterId: args[3],}
 
 	PayerAsBytes, err := json.Marshal(Payerdata)
 	if err != nil {
