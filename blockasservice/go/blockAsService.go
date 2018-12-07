@@ -60,6 +60,7 @@ func (t *SimpleChaincode) initLedger(stub shim.ChaincodeStubInterface, args[]str
 		return shim.Error("Incorrect number of arguments. Expecting 1")
 	}
 	i := rand.Int()
+	var buffer bytes.Buffer
 	id := fmt.Sprintf("%s%d","DATA",i)
 	var data interface{}
 	err := json.Unmarshal([]byte(args[0]), &data)
@@ -74,8 +75,8 @@ func (t *SimpleChaincode) initLedger(stub shim.ChaincodeStubInterface, args[]str
 	if insertErr!= nil {
 		return shim.Error(insertErr.Error())
 	}
-	return shim.Success(nil)
-	
+	buffer.WriteString(id)
+	return shim.Success(buffer.Bytes())	
 }
 
 func validUser(stub shim.ChaincodeStubInterface, username string, password string, context string) (bool, string){
