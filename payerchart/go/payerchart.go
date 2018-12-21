@@ -128,8 +128,12 @@ func (t *SimpleChaincode) insert(stub shim.ChaincodeStubInterface, args[]string)
 	if len(args) != 4 {
 		return shim.Error("Incorrect number of arguments. Expecting 4")
 	}
-	encounter_id := insertData(stub,args)
-	buffer.WriteString(encounter_id)
+	check, response := insertData(stub,args)
+	if check == "error" {
+		return shim.Error(response)
+	}else {
+		buffer.WriteString(response)
+	}
 		
 	return shim.Success(buffer.Bytes())
 }
