@@ -79,50 +79,45 @@ func (t *SimpleChaincode) initLedger(stub shim.ChaincodeStubInterface, args[]str
 	return shim.Success(buffer.Bytes())	
 }
 
-func validUser(stub shim.ChaincodeStubInterface, username string, password string, context string) (bool, string){
-	queryString := fmt.Sprintf("{\"selector\":{\"username\":\"%s\",\"password\":\"%s\",\"context\":\"%s\"}}", username, password, context)
-	resultsIterator, err := getQueryResultForQueryString(stub, queryString)
-	if err != nil {
-		return false, "Error while sending query"
-	}
-	if len(resultsIterator) == 0 {
-		return false, "Invalid User"
-	}
-	return true, ""
-
-}
-
 //insertData - inserts the data in the database
 func (t *SimpleChaincode) insertData(stub shim.ChaincodeStubInterface, args[]string) pb.Response {
-
-	if args[0] == "check" {
-		if len(args) != 4 {
-		return shim.Error("Incorrect number of arguments. Expecting 4- {\"check\",\"username\",\"password\",\"context\"}")
-		}
-		resp, message := validUser(stub,args[1],args[2],args[3])
-		if !resp {
-			return shim.Error(message)
-		}else {
-			return shim.Success(nil)
-		}
-	}
 	
-	i := rand.Int()
-	id := fmt.Sprintf("%s%d","DATA",i)
-	var data interface{}
-	err := json.Unmarshal([]byte(args[0]), &data)
-	if err != nil {
-   		return shim.Error(err.Error())
-	} 
-	dataInBytes, err := json.Marshal(data)
+	queryString := fmt.Sprintf("{\"selector\":{\"username\":\"%s\",\"password\":\"%s\",\"context\":\"%s\"}}", args[0], args[1], args[2])
+	resultsIterator, err := getQueryResultForQueryString(stub, queryString)
 	if err != nil {
 		return shim.Error(err.Error())
-	 }
+	}
+	if len(resultsIterator) == 0 {
+		return shim.Error("Invalid Username and Password or Context")
+	}	
+	i := rand.Int()
+	var buffer bytes.Buffer
+	id := fmt.Sprintf("%s%d","DATA",i)
+	m := make(map[string]interface{})
+	n := make(map[string]interface{})
+	temp := make(map[string]interface{})
+	if err := json.Unmarshal(resultsIterator, &m); err != nil {
+		return shim.Error(err.Error())
+	}
+	if err := json.Unmarshal([]byte(args[3]), &n); err != nil {
+		return shim.Error(err.Error())
+	}
+	for k := range m {
+		if k!="username" && k!="password" && k!="context"{
+    			fmt.Printf("key[%s] value[%s]\n", k, m[k])
+			temp[k] = n[k]
+		}
+	}
+	dataInBytes, err := json.Marshal(temp)
+	if err != nil {
+		return shim.Error(err.Error())
+	}	
 	insertErr := stub.PutState(id, dataInBytes)
 	if insertErr!= nil {
 		return shim.Error(insertErr.Error())
 	}
-	return shim.Success(nil)	
+	buffer.WriteString(id)
+	return shim.Success(buffer.Bytes())	
 }
 
 //to fetch the data from database by hash
@@ -177,15 +172,16 @@ func getQueryResultForQueryString(stub shim.ChaincodeStubInterface, queryString 
 		if bArrayMemberAlreadyWritten == true {
 			buffer.WriteString(",")
 		}		
-		buffer.WriteString("{\"Key\":")
-		buffer.WriteString("\"")
-		buffer.WriteString(queryResponse.Key)
-		buffer.WriteString("\"")
+		//buffer.WriteString("{\"Key\":")
+		//buffer.WriteString("\"")
+		//buffer.WriteString(queryResponse.Key)
+		//buffer.WriteString("\"")
 
-		buffer.WriteString(", \"Record\":")
+		//buffer.WriteString(", \"Record\":")
 		// Record is a JSON object, so we write as-is
+		//buffer.WriteString("{")
 		buffer.WriteString(string(queryResponse.Value))
-		buffer.WriteString("}")
+		//buffer.WriteString("}")
 		bArrayMemberAlreadyWritten = true
 	}
 
