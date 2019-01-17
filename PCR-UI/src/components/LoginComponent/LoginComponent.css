@@ -1,0 +1,60 @@
+.login-main{
+    background: #2481ca;
+    min-height : 100vh; 
+}
+
+.login-header{
+    color: white;
+    text-align: center;
+    font-size: calc(10px + 4vmin);
+    height: 15%;
+    background-color: rgb(52, 52, 53)
+}
+
+.header-text {
+    font-size: 1.5em; 
+    margin-right: 10%;
+    color: white
+}
+
+.login-input-container{
+    text-align: center;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 4vmin);
+    color: white;
+    margin-top: 10%
+}
+.username-box{
+
+    border-radius: 8px;
+    padding: 20px; 
+    width: 250px;
+    height: 5px; 
+    float : left;  
+}
+
+.required-spacing{
+    padding: 10%;
+    display: block;
+}
+
+.submit-Box {
+    margin-left: 35%;
+    border-radius: 8px;
+    padding: 20px; 
+    width: 100px;    
+    text-align: center;
+    line-height: 4px;
+    cursor: pointer;
+    
+}
+
+.required-label-space{
+    
+    display: block;
+    text-align: center
+}

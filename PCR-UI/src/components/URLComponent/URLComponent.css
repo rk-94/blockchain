@@ -1,0 +1,52 @@
+.App {
+    text-align: center;
+    background-color: #2481ca;
+    min-height : 100vh; 
+  }
+  
+  .App-header {
+    
+    /* min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white; */
+    background: #2481ca;
+    min-height : 100vh; 
+  }
+  
+  .App-link {
+    color: #61dafb;
+  }
+  
+  .title {
+    color: white;
+    text-align: center;
+    font-size: calc(10px + 4vmin);
+    height: 15%;
+    background-color: rgb(52, 52, 53)
+  }
+  
+  .inputBox {
+    border-radius: 8px;
+    padding: 20px; 
+    width: 250px;
+    height: 5px; 
+    float : left;   
+}
+
+.submitBox {
+    border-radius: 8px;
+    padding: 20px; 
+    width: 100px;    
+    text-align: center;
+    line-height: 4px;
+    margin-right: -15%;
+    cursor: pointer;
+    
+}
+
+
+  

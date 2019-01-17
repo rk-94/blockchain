@@ -1,0 +1,140 @@
+.hash-main {
+    text-align: center;
+    background: #2481ca;
+    /* min-height: 150vh; */
+    height: 100vh;
+    overflow: auto;
+  }
+
+  .hash-header {
+    color: white;
+    text-align: center;
+    font-size: calc(10px + 4vmin);
+    height: 10%;
+    background-color: rgb(52, 52, 53) 
+  }
+
+  .biggerCircle {
+    margin-top: 250px;
+    margin-right : 60%;
+    min-height: 300px;
+    min-width: 300px;
+    height: auto;
+    width: auto;
+    background-color: #4caf50;
+    border-radius: 50%;
+    display: inline-block;
+    line-height:300px;
+    text-align: center;
+    font-size: 2rem;
+    color : white;
+    cursor: pointer;
+  }
+
+  .smallCircle {
+
+    position: relative;
+    height: 75px;
+    width: 75px;
+    background-color:  
+    #4caf50 ;
+    border-radius: 50%;
+    display: inline-block;
+    align-self: stretch;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+  
+  .circles-conatiner {
+      position: absolute;
+      top : 30%;
+      margin-left: 40%;
+      float: right;
+      
+  }
+
+  .text-placement {
+
+    color:white;
+    position: absolute;
+    float: right;
+    line-height: 15px;
+    padding-left: 10px;
+    text-align: left;
+    padding-top: 25px;
+
+  }
+
+  .value-conatiner {
+    margin-bottom : 200px;
+    position : absolute;
+    width: 25%; 
+    height: auto;
+    bottom :-20px;
+    left : 70%;  
+    border-radius: 10px;
+    border: 2px solid  #bbb;
+    min-height: 300px;
+    background-color: #2481ca;
+    
+  }
+
+  .select-field{
+    color: white;
+    font-size : 1.5em;
+   
+  }
+
+  .wrapper{
+    padding-top: 10%;
+    display: inline;
+    min-height: 100vh;
+    background-color: #2481ca
+  }
+
+  .rectangle-holders{
+    width: 25%; 
+    min-height: 300px;
+    height: auto;
+    border-radius: 10px;
+    border: 2px solid  #bbb; 
+    background-color: #2481ca;
+    position: relative;
+    float:left;
+    margin-left: 5%;
+    margin-top: 10%;
+  }
+
+  .back-button{
+    position: relative;
+    border-radius: 8px;
+    padding: 20px; 
+    width: 100px;    
+    text-align: center;
+    line-height: 4px;
+    cursor: pointer;
+    right: 03%;
+    top:120px;
+    position :absolute
+  }
+
+  .home-btn{
+    background-color: DodgerBlue; /* Blue background */
+    border: none; /* Remove borders */
+    color: blue; /* White text */
+    padding: 12px 16px; /* Some padding */
+    font-size: 16px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+  }
+
+  .text-styling{
+    margin-right:20%;
+    font-size: 2em;
+    color: white
+  }
+
+  .logout-button{
+    float: right;
+    margin-top: 3%
+
+  }
