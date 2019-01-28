@@ -6,6 +6,8 @@ package main
  import (
 	"fmt"
 	"bytes"
+	"encoding/json"
+	"math/rand"
         "github.com/hyperledger/fabric/core/chaincode/shim"
         pb "github.com/hyperledger/fabric/protos/peer"
        ) 
@@ -17,11 +19,19 @@ type SimpleChaincode struct {
 //Define the data structure
 type Payer struct {
 	ClaimId		string `json:"claimId"`
-	FhirUrl    	string `json:"fhirUrl"`
+	FhirUrl	[]string `json:"fhirUrl"`
 	PatientId   string `json:"patientId"`
 	PayerId		string `json:"payerId"`
 	SubmitterId	string `json:"submitterId"`
 }
+
+type Data struct {
+	SubmitterID string   `json:"submitterId"`
+	PayerID     string   `json:"payerId"`
+	Fhir        []string `json:"fhir"`
+	SubmitterIndicator int `json:"submitterIndicator"`
+}
+
 // ===================================================================================
 // Main
 // ===================================================================================
@@ -48,6 +58,8 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return t.isValid(stub,args)
 	}else if function == "queryByHash"{
 		return t.queryByHash(stub,args)
+	}else if function == "initLedger"{
+		return t.initLedger(stub,args)
 	}else if function == "queryCustom"{
 		return t.queryCustom(stub,args)
 	}else if function == "insert"{
@@ -56,6 +68,31 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	
 	fmt.Println("invoke did not find func: " + function) //error
 	return shim.Error("Received unknown function invocation")
+}
+
+func (t *SimpleChaincode) initLedger(stub shim.ChaincodeStubInterface, args[]string) pb.Response {
+	
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+	i := rand.Int()
+	var buffer bytes.Buffer
+	id := fmt.Sprintf("%s%d","DATA",i)
+	var data interface{}
+	err := json.Unmarshal([]byte(args[0]), &data)
+	if err != nil {
+   		return shim.Error(err.Error())
+	} 
+	dataInBytes, err := json.Marshal(data)
+	if err != nil {
+		return shim.Error(err.Error())
+	 }
+	insertErr := stub.PutState(id, dataInBytes)
+	if insertErr!= nil {
+		return shim.Error(insertErr.Error())
+	}
+	buffer.WriteString(id)
+	return shim.Success(buffer.Bytes())	
 }
 
 //will do the validation of hash and payerId
@@ -133,7 +170,6 @@ func (t *SimpleChaincode) insert(stub shim.ChaincodeStubInterface, args[]string)
 		return shim.Error(response)
 	}else {
 		buffer.WriteString(response)
-	}
-		
+	}	
 	return shim.Success(buffer.Bytes())
 }
