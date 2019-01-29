@@ -1,0 +1,135 @@
+
+> blockchain-api@0.1.0 start /pcr2
+> react-scripts start
+
+Starting the development server...
+
+Compiled with warnings.
+
+./src/createChannel.js
+  Line 24:    Unexpected string concatenation of literals  no-useless-concat
+  Line 47:    Unexpected string concatenation of literals  no-useless-concat
+  Line 104:   Unexpected string concatenation of literals  no-useless-concat
+  Line 120:   Unexpected string concatenation of literals  no-useless-concat
+  Line 136:   Unexpected string concatenation of literals  no-useless-concat
+  Line 152:  Unexpected string concatenation of literals  no-useless-concat
+  Line 166:  Unexpected string concatenation of literals  no-useless-concat
+  Line 186:  Unexpected string concatenation of literals  no-useless-concat
+  Line 244:   Unexpected string concatenation of literals  no-useless-concat
+
+./src/main.js
+  Line 5:   'ApplicationMenuName' is defined but never used  no-unused-vars
+  Line 15:  'Heading' is defined but never used              no-unused-vars
+
+./src/index.js
+  Line 6:  'Channel' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+
+> blockchain-api@0.1.0 start /pcr2
+> react-scripts start
+
+Starting the development server...
+
+Compiled with warnings.
+
+./src/createChannel.js
+  Line 24:    Unexpected string concatenation of literals  no-useless-concat
+  Line 47:    Unexpected string concatenation of literals  no-useless-concat
+  Line 104:   Unexpected string concatenation of literals  no-useless-concat
+  Line 120:   Unexpected string concatenation of literals  no-useless-concat
+  Line 136:   Unexpected string concatenation of literals  no-useless-concat
+  Line 152:  Unexpected string concatenation of literals  no-useless-concat
+  Line 166:  Unexpected string concatenation of literals  no-useless-concat
+  Line 186:  Unexpected string concatenation of literals  no-useless-concat
+  Line 244:   Unexpected string concatenation of literals  no-useless-concat
+
+./src/main.js
+  Line 5:   'ApplicationMenuName' is defined but never used  no-unused-vars
+  Line 15:  'Heading' is defined but never used              no-unused-vars
+
+./src/index.js
+  Line 6:  'Channel' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+Compiling...
+Compiled with warnings.
+
+./src/createChannel.js
+  Line 24:    Unexpected string concatenation of literals  no-useless-concat
+  Line 47:    Unexpected string concatenation of literals  no-useless-concat
+  Line 104:   Unexpected string concatenation of literals  no-useless-concat
+  Line 120:   Unexpected string concatenation of literals  no-useless-concat
+  Line 136:   Unexpected string concatenation of literals  no-useless-concat
+  Line 152:  Unexpected string concatenation of literals  no-useless-concat
+  Line 166:  Unexpected string concatenation of literals  no-useless-concat
+  Line 186:  Unexpected string concatenation of literals  no-useless-concat
+  Line 244:   Unexpected string concatenation of literals  no-useless-concat
+
+./src/main.js
+  Line 5:   'ApplicationMenuName' is defined but never used  no-unused-vars
+  Line 15:  'Heading' is defined but never used              no-unused-vars
+
+./src/index.js
+  Line 6:  'Channel' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+Compiling...
+Compiled with warnings.
+
+./src/createChannel.js
+  Line 24:    Unexpected string concatenation of literals  no-useless-concat
+  Line 47:    Unexpected string concatenation of literals  no-useless-concat
+  Line 104:   Unexpected string concatenation of literals  no-useless-concat
+  Line 120:   Unexpected string concatenation of literals  no-useless-concat
+  Line 136:   Unexpected string concatenation of literals  no-useless-concat
+  Line 152:  Unexpected string concatenation of literals  no-useless-concat
+  Line 166:  Unexpected string concatenation of literals  no-useless-concat
+  Line 186:  Unexpected string concatenation of literals  no-useless-concat
+  Line 244:   Unexpected string concatenation of literals  no-useless-concat
+
+./src/main.js
+  Line 5:   'ApplicationMenuName' is defined but never used  no-unused-vars
+  Line 15:  'Heading' is defined but never used              no-unused-vars
+
+./src/index.js
+  Line 6:  'Channel' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+
+> blockchain-api@0.1.0 start /pcr2
+> react-scripts start
+
+Starting the development server...
+
+Compiled with warnings.
+
+./src/createChannel.js
+  Line 24:    Unexpected string concatenation of literals  no-useless-concat
+  Line 47:    Unexpected string concatenation of literals  no-useless-concat
+  Line 104:   Unexpected string concatenation of literals  no-useless-concat
+  Line 120:   Unexpected string concatenation of literals  no-useless-concat
+  Line 136:   Unexpected string concatenation of literals  no-useless-concat
+  Line 152:  Unexpected string concatenation of literals  no-useless-concat
+  Line 166:  Unexpected string concatenation of literals  no-useless-concat
+  Line 186:  Unexpected string concatenation of literals  no-useless-concat
+  Line 244:   Unexpected string concatenation of literals  no-useless-concat
+
+./src/main.js
+  Line 5:   'ApplicationMenuName' is defined but never used  no-unused-vars
+  Line 15:  'Heading' is defined but never used              no-unused-vars
+
+./src/index.js
+  Line 6:  'Channel' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
